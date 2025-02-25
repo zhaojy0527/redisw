@@ -1,6 +1,3 @@
-我明白了，您想要完整更新整个 README.md 文件。我会创建一个完整的新文件来替换当前的内容。
-
-```markdown:/Users/zhaojy/aiprojects/redisw/README.md
 # Redisw
 
 Redisw 是一个简单易用的 Redis 服务器连接管理工具，支持多服务器配置和快速切换。它能帮助开发者快速在多个 Redis 服务器之间进行切换，提高开发和运维效率。
