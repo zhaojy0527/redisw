@@ -121,14 +121,6 @@ make test
 make clean
 ```
 
-## 贡献指南
-
-1. Fork 本仓库
-2. 创建您的特性分支 (`git checkout -b feature/AmazingFeature`)
-3. 提交您的改动 (`git commit -m 'Add some AmazingFeature'`)
-4. 推送到分支 (`git push origin feature/AmazingFeature`)
-5. 创建一个 Pull Request
-
 ## 问题反馈
 
 如果您在使用过程中遇到任何问题，或有任何建议，请：
@@ -139,13 +131,3 @@ make clean
 ## 许可证
 
 本项目采用 MIT 许可证 - 详见 [LICENSE](LICENSE) 文件
-
-## 作者
-
-zhaojy0527 - zhaojianyong0527@gmail.com
-
-## 致谢
-
-- [promptui](https://github.com/manifoldco/promptui) - 提供了优秀的命令行交互界面
-- [yaml.v2](https://gopkg.in/yaml.v2) - 提供了 YAML 配置文件解析支持
-```
