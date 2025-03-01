@@ -24,32 +24,75 @@ var (
 )
 
 func getDefaultConfigPath() string {
-	homeDir, err := os.UserHomeDir()
-	if err != nil {
-		return "./redisw_config.yml"
-	}
+    homeDir, err := os.UserHomeDir()
+    if err != nil {
+        return "./redisw_config.yml"
+    }
 
-	configDir := filepath.Join(homeDir, ".config", "redisw")
+    configDir := filepath.Join(homeDir, ".config", "redisw")
+    if err := os.MkdirAll(configDir, 0755); err != nil {
+        return "./redisw_config.yml"
+    }
 
-	// 确保配置目录存在
-	if err := os.MkdirAll(configDir, 0755); err != nil {
-		return "./redisw_config.yml"
-	}
+    // 检查 ~/.config/redisw 目录下的配置文件
+    ymlPath := filepath.Join(configDir, "redisw_config.yml")
+    yamlPath := filepath.Join(configDir, "redisw_config.yaml")
 
-	// 依次检查 .yml 和 .yaml 文件
-	ymlPath := filepath.Join(configDir, "redisw_config.yml")
-	yamlPath := filepath.Join(configDir, "redisw_config.yaml")
+    // 如果配置文件已存在，直接返回
+    if _, err := os.Stat(ymlPath); err == nil {
+        return ymlPath
+    }
+    if _, err := os.Stat(yamlPath); err == nil {
+        return yamlPath
+    }
 
-	// 优先使用已存在的配置文件
-	if _, err := os.Stat(ymlPath); err == nil {
-		return ymlPath
-	}
-	if _, err := os.Stat(yamlPath); err == nil {
-		return yamlPath
-	}
+    // 尝试从项目目录复制配置文件
+    projectYml := "./redisw_config.yml"
+    projectYaml := "./redisw_config.yaml"
 
-	// 如果都不存在，默认返回 .yml 后缀的路径
-	return ymlPath
+    // 检查并复制项目目录的配置文件
+    if _, err := os.Stat(projectYml); err == nil {
+        copyFile(projectYml, ymlPath)
+        return ymlPath
+    }
+    if _, err := os.Stat(projectYaml); err == nil {
+        copyFile(projectYaml, ymlPath)
+        return ymlPath
+    }
+
+    // 如果都不存在，创建默认配置
+    defaultConfig := []RedisServer{
+        {
+            Name:     "localhost",
+            Host:     "127.0.0.1",
+            Port:     6379,
+            Password: "",
+        },
+    }
+
+    file, err := os.Create(ymlPath)
+    if err == nil {
+        encoder := yaml.NewEncoder(file)
+        encoder.Encode(defaultConfig)
+        file.Close()
+    }
+
+    return ymlPath
+}
+
+// 添加复制文件的辅助函数
+func copyFile(src, dst string) error {
+    input, err := os.ReadFile(src)
+    if err != nil {
+        return err
+    }
+
+    err = os.WriteFile(dst, input, 0644)
+    if err != nil {
+        return err
+    }
+
+    return nil
 }
 
 func main() {
