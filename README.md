@@ -85,6 +85,7 @@ redisw
 
 # 指定配置文件启动
 redisw -config /path/to/redisw_config.yml
+```
 
 ### 交互式界面操作
 
