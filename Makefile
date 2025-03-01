@@ -1,6 +1,7 @@
 # 定义变量
 BINARY_NAME=redisw
 GO=go
+VERSION=1.1.0
 
 # 默认目标
 .PHONY: all
@@ -9,7 +10,7 @@ all: build
 # 构建项目
 .PHONY: build
 build:
-	$(GO) build -o $(BINARY_NAME)
+	$(GO) build -ldflags "-X main.Version=$(VERSION)" -o $(BINARY_NAME)
 
 # 运行测试
 .PHONY: test

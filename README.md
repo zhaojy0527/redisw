@@ -32,6 +32,11 @@ apt-get install redis-tools
 
 ## 安装
 
+### 通过二进制包安装
+
+1. 访问 [Releases](https://github.com/zhaojy0527/redisw/releases) 页面
+2. 下载适合您系统的二进制包
+
 ### 通过 Homebrew 安装
 
 ```bash
@@ -49,7 +54,7 @@ make build
 ## 配置
 
 ### 配置文件位置
-默认配置文件位置：`~/.config/redisw/config.yml`
+默认配置文件位置：`~/.config/redisw/redisw_config.yml`
 
 ### 配置文件示例
 
@@ -93,33 +98,6 @@ redisw -version
 4. 按 Enter 键连接选中的服务器
 5. 按 Ctrl+C 可以返回服务器选择界面
 6. 再次按 Ctrl+C 可以退出程序
-
-## 开发
-
-### 获取源码
-
-```bash
-git clone https://github.com/zhaojy0527/redisw.git
-cd redisw
-```
-
-### 构建
-
-```bash
-make build
-```
-
-### 运行测试
-
-```bash
-make test
-```
-
-### 清理构建文件
-
-```bash
-make clean
-```
 
 ## 问题反馈
 

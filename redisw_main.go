@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 
 	"github.com/manifoldco/promptui"
-	"gopkg.in/yaml.v2" // 用于解析 YAML 文件
+	"gopkg.in/yaml.v2"
 )
 
 type RedisServer struct {
@@ -19,8 +20,37 @@ type RedisServer struct {
 }
 
 var (
-	configFile = flag.String("config", "./redisw_config.yml", "path to config file")
+	configFile = flag.String("config", getDefaultConfigPath(), "path to config file")
 )
+
+func getDefaultConfigPath() string {
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return "./redisw_config.yml"
+	}
+
+	configDir := filepath.Join(homeDir, ".config", "redisw")
+
+	// 确保配置目录存在
+	if err := os.MkdirAll(configDir, 0755); err != nil {
+		return "./redisw_config.yml"
+	}
+
+	// 依次检查 .yml 和 .yaml 文件
+	ymlPath := filepath.Join(configDir, "redisw_config.yml")
+	yamlPath := filepath.Join(configDir, "redisw_config.yaml")
+
+	// 优先使用已存在的配置文件
+	if _, err := os.Stat(ymlPath); err == nil {
+		return ymlPath
+	}
+	if _, err := os.Stat(yamlPath); err == nil {
+		return yamlPath
+	}
+
+	// 如果都不存在，默认返回 .yml 后缀的路径
+	return ymlPath
+}
 
 func main() {
 	flag.Parse()
@@ -63,7 +93,7 @@ func chooseServer(servers []RedisServer) *RedisServer {
 	prompt := promptui.Select{
 		Label: "Select Redis Server",
 		Items: getServerNames(servers), // 使用辅助函数获取服务器名称
-		Size:  len(servers), // 设置显示的项目数量为所有服务器
+		Size:  len(servers),            // 设置显示的项目数量为所有服务器
 		Searcher: func(input string, index int) bool {
 			server := servers[index]
 			name := strings.ReplaceAll(strings.ToLower(server.Name), " ", "")
@@ -89,7 +119,7 @@ func chooseServer(servers []RedisServer) *RedisServer {
 
 func connectToRedis(server *RedisServer) {
 	// 构建 redis-cli 命令
-	cmd := exec.Command("redis-cli", "-h", server.Host, "-p", fmt.Sprintf("%d", server.Port),"-c")
+	cmd := exec.Command("redis-cli", "-h", server.Host, "-p", fmt.Sprintf("%d", server.Port), "-c")
 	if server.Password != "" {
 		cmd.Args = append(cmd.Args, "-a", server.Password)
 	}

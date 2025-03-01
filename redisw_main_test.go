@@ -2,8 +2,51 @@ package main
 
 import (
 	"os"
+	"path/filepath"
 	"testing"
 )
+
+func TestGetDefaultConfigPath(t *testing.T) {
+	// 获取测试用的临时主目录
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// 测试配置目录
+	configDir := filepath.Join(homeDir, ".config", "redisw")
+	ymlPath := filepath.Join(configDir, "redisw_config.yml")
+	yamlPath := filepath.Join(configDir, "redisw_config.yaml")
+
+	// 清理测试环境
+	defer func() {
+		os.Remove(ymlPath)
+		os.Remove(yamlPath)
+		os.Remove(configDir)
+	}()
+
+	// 测试场景1：目录不存在时
+	path := getDefaultConfigPath()
+	if path != ymlPath {
+		t.Errorf("Expected %s, got %s", ymlPath, path)
+	}
+
+	// 测试场景2：创建 .yml 文件
+	os.MkdirAll(configDir, 0755)
+	os.Create(ymlPath)
+	path = getDefaultConfigPath()
+	if path != ymlPath {
+		t.Errorf("Expected %s, got %s", ymlPath, path)
+	}
+
+	// 测试场景3：创建 .yaml 文件
+	os.Remove(ymlPath)
+	os.Create(yamlPath)
+	path = getDefaultConfigPath()
+	if path != yamlPath {
+		t.Errorf("Expected %s, got %s", yamlPath, path)
+	}
+}
 
 func TestLoadConfig(t *testing.T) {
 	// 创建临时配置文件
