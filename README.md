@@ -84,11 +84,7 @@ make build
 redisw
 
 # 指定配置文件启动
-redisw -config /path/to/config.yml
-
-# 显示版本信息
-redisw -version
-```
+redisw -config /path/to/redisw_config.yml
 
 ### 交互式界面操作
 
