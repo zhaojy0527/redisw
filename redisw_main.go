@@ -29,6 +29,18 @@ func getDefaultConfigPath() string {
         return "./redisw_config.yml"
     }
 
+    // 首先检查家目录
+    homeYml := filepath.Join(homeDir, "redisw_config.yml")
+    homeYaml := filepath.Join(homeDir, "redisw_config.yaml")
+
+    if _, err := os.Stat(homeYml); err == nil {
+        return homeYml
+    }
+    if _, err := os.Stat(homeYaml); err == nil {
+        return homeYaml
+    }
+
+    // 其次检查 .config 目录
     configDir := filepath.Join(homeDir, ".config", "redisw")
     if err := os.MkdirAll(configDir, 0755); err != nil {
         return "./redisw_config.yml"
