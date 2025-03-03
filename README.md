@@ -37,10 +37,12 @@ apt-get install redis-tools
 1. 访问 [Releases](https://github.com/zhaojy0527/redisw/releases) 页面
 2. 下载适合您系统的二进制包
 
-### 通过 Homebrew 安装
+### 通过 Homebrew tap 安装
+
+从 [homebrew-redisw](https://github.com/zhaojy0527/homebrew-redisw) 安装：
 
 ```bash
-brew install redisw
+brew tap zhaojy0527/redisw && brew install redisw
 ```
 
 ### 从源码安装
